@@ -176,6 +176,13 @@ public class gmaze {
 
 		String mode = scan.next();
 		int select_mode;
+		/*
+		 * This section was intended to target different solveMaze function
+		 * based on the select_mode, which is determined by the scan mode QS, AS, FS
+		 * In this final implementation those functions have become obsolete due to the
+		 * fact that the developing team suggested only one scan, the QS.
+		 * All other scans are now linked to QS.
+		 */
 
 		switch(mode){
 		case "qs":
@@ -213,54 +220,25 @@ public class gmaze {
 			boolean isSolve = false;
 
 			maze = makeMaze(r,c, percent);
-			System.out.println("You have " + num_intrud + " intruders in the maze");
+			System.out.println("You have " + num_intrud + " intruders in the maze"); 
 			System.out.println("How many intruders are you willing to destroy?");
 			
 			String intru = scan.next();
-			check_num= checkValue(intru);
+			check_num= isStringInt(intru);
 
 			while(check_num == false){
 				System.out.print("Enter a number please:");
 
 				intru = scan.next();
-				check_num= checkValue(intru);
+				check_num= isStringInt(intru);
 			}
 			destroy_intrud= Integer.parseInt(intru);
 			destroy_intrud = toPositiveInteger(destroy_intrud);
-
-			/*
-			 * This section was intended to target different solveMaze function
-			 * based on the select_mode, which is determined by the scan mode QS, AS, FS
-			 * In this final implementation those functions have become obsolete due to the
-			 * fact that the developing team suggested only one scan, the QS.
-			 * All other scans are now linked to QS.
-			 */
-			
-			if (select_mode ==0){
-				/*mode_int = (int)(num_intrud *(0.1));             // determine the number of wall the Navigator is allowed to bypass
-				System.out.println("inside wall"+ inside_wall);
-				System.out.println(num_intrud);                    //For debugging purposes.
-				System.out.println(mode_int);
-				System.out.println("first");*/
-				isSolve = solveMazeEG(1,1,maze);
-
-			}else if(select_mode ==1){
-				/*mode_int = (int)(num_intrud *(0.2));
-				System.out.println("inside wall"+ inside_wall);
-				System.out.println(num_intrud);                     //For debugging purposes.
-				System.out.println(mode_int);
-				System.out.println("second");*/
-				isSolve = solveMazeAG(1,1,maze);
-
-			}else{
-				/*mode_int = (int)(num_intrud *(0.4));
-				System.out.println("inside wall"+ inside_wall);
-				System.out.println(num_intrud);                      //For debugging purposes.
-				System.out.println(mode_int);
-				System.out.println("third");*/
-				isSolve = solveMazeFG(1,1,maze);
-
-			}
+			if (destroy_intrud > num_intrud)
+				destroy_intrud = num_intrud;        // Set the value of destroy_intrud to 
+													// num_intrud if greater.
+		
+				isSolve = solveMazeEG(1,1,maze,select_mode);
 
 
 			if(isSolve){
@@ -269,8 +247,10 @@ public class gmaze {
 				System.out.println("No more intruder. The system is clean.");
 			}else{
 				System.out.println("The VRunner has scanned your Maze and killed "+(hit)+" intruders");
-
-				if((num_intrud - hit)>0){
+				if(hit == destroy_intrud){
+					System.out.println("The goal has been reached");
+				}else if((num_intrud - hit)>0){				
+					
 					System.out.println((num_intrud - hit)+ " intruders still remain in the system. ");
 					System.out.println("The remaining intruders are unreachable");
 					System.out.println("Reduce the percentage of walls for better performance.");
@@ -386,6 +366,11 @@ public class gmaze {
 		}
 
 	}
+	/**********************************************************************************
+	 * 
+	 * @param perc
+	 * @return	True
+	 */
 	private static boolean checkValue(String perc) {
 		// TODO Auto-generated method stub
 		int correct_num = 0;
@@ -598,9 +583,17 @@ public class gmaze {
 	 * @Note	  	: {@link row},  {@link col} are the walls or rooms position that the Navigator 
 	 * 				  check before moving.
 	 */
-	private static boolean solveMazeEG(int row, int col, String[][]m) {
+	private static boolean solveMazeEG(int row, int col, String[][]m, int mode) {
 
 		int speedSleep = 500;
+		if(mode == 0){
+			mode_int = (int)(num_intrud *(0.1));
+		}else if(mode == 1){
+			mode_int = (int)(num_intrud *(0.2));
+		}else{
+			mode_int = (int)(num_intrud *(0.3));
+		}
+		
 		
 			if ((m[row][col] == " ") &&(hit <destroy_intrud)) {
 				m[row][col] = "@";      // add this cell to the path
@@ -615,10 +608,10 @@ public class gmaze {
 	
 				try { Thread.sleep(speedSleep); }
 				catch (InterruptedException e) { }
-				if ( (solveMazeEG(row,col+1,m) ) ||     // try to solve maze by extending path
-						(solveMazeEG(row+1,col,m))   ||     //    in each possible direction
-						(solveMazeEG(row-1,col,m))||
-						(solveMazeEG(row,col-1,m))){
+				if ( (solveMazeEG(row,col+1,m,mode) ) ||     // try to solve maze by extending path
+						(solveMazeEG(row+1,col,m,mode))   ||     //    in each possible direction
+						(solveMazeEG(row-1,col,m,mode))||
+						(solveMazeEG(row,col-1,m,mode))){
 					//				count1++;
 					return true;
 	
@@ -655,10 +648,10 @@ public class gmaze {
 	//			}
 				try { Thread.sleep(speedSleep); }
 				catch (InterruptedException e) { }
-				if ( (solveMazeEG(row,col+1,m) ) ||     // try to solve maze by extending path
-						(solveMazeEG(row+1,col,m))   ||     //    in each possible direction
-						(solveMazeEG(row-1,col,m))||
-						(solveMazeEG(row,col-1,m))){
+				if ( (solveMazeEG(row,col+1,m,mode) ) ||     // try to solve maze by extending path
+						(solveMazeEG(row+1,col,m,mode))   ||     //    in each possible direction
+						(solveMazeEG(row-1,col,m,mode))||
+						(solveMazeEG(row,col-1,m,mode))){
 					//				count1++;
 					return true;
 	
@@ -669,7 +662,7 @@ public class gmaze {
 				gmazeCreator().setMaze(m);
 				gmazeCreator().prn(gmazeCreator().getMaze());
 
-			}else if((count1 <=6) && (row !=0)&&(row < gmazeCreator().getRows()-1)&&(col!=0)
+			}else if((count1 <=mode_int) && (row !=0)&&(row < gmazeCreator().getRows()-1)&&(col!=0)
 					&&(col < gmazeCreator().getCol()-1)&&(maze[row][col]=="x") &&(hit <destroy_intrud)){ //This is to avoid the Runner to be
 				maze[row][col] = "@";									// stuck in the first move
 				putSquare(row,col,m,"@");
@@ -677,10 +670,10 @@ public class gmaze {
 				gmazeCreator().prn(gmazeCreator().getMaze());
 //				mazeObject2.setMaze(m);
 //				mazeObject2.prn(mazeObject2.getMaze());
-				if ( (solveMazeEG(row,col+1,m) ) ||     // try to solve maze by extending path
-						(solveMazeEG(row+1,col,m))   ||     //    in each possible direction
-						(solveMazeEG(row-1,col,m))||
-						(solveMazeEG(row,col-1,m))){
+				if ( (solveMazeEG(row,col+1,m,mode) ) ||     // try to solve maze by extending path
+						(solveMazeEG(row+1,col,m,mode))   ||     //    in each possible direction
+						(solveMazeEG(row-1,col,m,mode))||
+						(solveMazeEG(row,col-1,m,mode))){
 					//				count1++;
 					return true;
 	
@@ -692,215 +685,6 @@ public class gmaze {
 				gmazeCreator().prn(gmazeCreator().getMaze());
 
 			}
-		//count1++;
-
-		return false;
-	}
-	/*************************************************************************
-	 * Function: solveMazeAG(): Enable when user want 50% of the intruders eliminated.
-	 * @param row
-	 * @param col
-	 * @param m
-	 * @return
-	 */
-	private static boolean solveMazeAG(int row, int col, String[][]m) {
-
-		String[][] maze = m;
-		gmaze mazeObject2 = new gmaze(m.length, m.length,m);
-
-		int speedSleep = 500;
-
-
-		if (maze[row][col] == " ") {
-			maze[row][col] = "@";      // add this cell to the path
-			count1++;
-			putSquare(row,col,m,"@");
-			mazeObject2.setMaze(m);
-			mazeObject2.prn(mazeObject2.getMaze());
-			//			if (row == mazeObject2.getRows()-2 && col == mazeObject2.getCol()-2)
-			//				return true;  // path has reached goal
-
-			try { Thread.sleep(speedSleep); }
-			catch (InterruptedException e) { }
-			if ( (solveMazeAG(row,col+1,m) ) ||     // try to solve maze by extending path
-					(solveMazeAG(row+1,col,m))   ||     //    in each possible direction
-					(solveMazeAG(row-1,col,m))||
-					(solveMazeAG(row,col-1,m))){
-				//				count1++;
-				return true;
-
-			}
-
-
-			// maze can't be solved from this cell, so backtrack out of the cell
-			maze[row][col] = "0";   // mark cell as having been visited
-			//count1++;
-			putSquare(row,col,m,"0");
-			mazeObject2.setMaze(m);
-			mazeObject2.prn(mazeObject2.getMaze());
-			//count1++;
-
-			try {
-				Thread.sleep(speedSleep);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}else if (maze[row][col]=="T"){
-			maze[row][col] = "@";
-			putSquare(row,col,m,"@");
-			hit++;			
-			mazeObject2.setMaze(m);
-			mazeObject2.prn(mazeObject2.getMaze());
-			if(hit == num_intrud) return true;
-			try { Thread.sleep(speedSleep); }
-			catch (InterruptedException e) { }
-			if ( (solveMazeAG(row,col+1,m) ) ||     // try to solve maze by extending path
-					(solveMazeAG(row+1,col,m))   ||     //    in each possible direction
-					(solveMazeAG(row-1,col,m))||
-					(solveMazeAG(row,col-1,m))){
-				//				count1++;
-				return true;
-
-			}
-			maze[row][col] = "0";   // mark cell as having been visited
-			//count1++;
-			putSquare(row,col,m,"0");
-			mazeObject2.setMaze(m);
-			mazeObject2.prn(mazeObject2.getMaze());
-			//			if(hit>1){
-			//				maze[row][col] = " ";
-			//				putSquare(row,col,m," ");
-			//				mazeObject2.setMaze(m);
-			//				mazeObject2.prn(mazeObject2.getMaze());
-			//				return true;  // path has reached goal
-			//			}
-		}else if((count1 <= 8) &&(row !=0)&&(row < mazeObject2.getRows()-1)&&(col!=0)
-				&&(col < mazeObject2.getCol()-1)&&(maze[row][col]=="x") ){  //This section is to knock down the
-			maze[row][col] = "@";									// wall depending on the mode selected
-			putSquare(row,col,m,"@");
-			mazeObject2.setMaze(m);
-			mazeObject2.prn(mazeObject2.getMaze());
-			if ( (solveMazeAG(row,col+1,m) ) ||     // try to solve maze by extending path
-					(solveMazeAG(row+1,col,m))   ||     //    in each possible direction
-					(solveMazeAG(row-1,col,m))||
-					(solveMazeAG(row,col-1,m))){
-				//				count1++;
-				return true;
-
-			}
-			maze[row][col] = "0";   // mark cell as having been visited
-			//count1++;
-			putSquare(row,col,m,"0");
-			mazeObject2.setMaze(m);
-			mazeObject2.prn(mazeObject2.getMaze());
-		}
-
-
-		//count1++;
-
-		return false;
-	}
-
-	/*********************************************************************************
-	 * Function: solveMazeFG() 
-	 * @param row
-	 * @param col
-	 * @param m
-	 * @return
-	 */
-	private static boolean solveMazeFG(int row, int col, String[][]m) {
-
-		String[][] maze = m;
-		gmaze mazeObject2 = new gmaze(m.length, m.length,m);
-
-		int speedSleep = 500;
-
-
-		if (maze[row][col] == " ") {
-			maze[row][col] = "@";      // add this cell to the path
-			count1++;
-			putSquare(row,col,m,"@");
-			mazeObject2.setMaze(m);
-			mazeObject2.prn(mazeObject2.getMaze());
-			//		if (row == mazeObject2.getRows()-2 && col == mazeObject2.getCol()-2)
-			//			return true;  // path has reached goal
-
-			try { Thread.sleep(speedSleep); }
-			catch (InterruptedException e) { }
-			if ( (solveMazeFG(row,col+1,m) ) ||     // try to solve maze by extending path
-					(solveMazeFG(row+1,col,m))   ||     //    in each possible direction
-					(solveMazeFG(row-1,col,m))||
-					(solveMazeFG(row,col-1,m))){
-				//			count1++;
-				return true;
-
-			}
-
-
-			// maze can't be solved from this cell, so backtrack out of the cell
-			maze[row][col] = "0";   // mark cell as having been visited
-			//count1++;
-			putSquare(row,col,m,"0");
-			mazeObject2.setMaze(m);
-			mazeObject2.prn(mazeObject2.getMaze());
-			//count1++;
-
-			try {
-				Thread.sleep(speedSleep);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}else if (maze[row][col]=="T"){			
-			maze[row][col] = "@";
-			putSquare(row,col,m,"@");
-			hit++;			
-			mazeObject2.setMaze(m);
-			mazeObject2.prn(mazeObject2.getMaze());
-			if(hit == num_intrud) return true;
-			try { Thread.sleep(speedSleep); }
-			catch (InterruptedException e) { }
-			if ( (solveMazeFG(row,col+1,m) ) ||     // try to solve maze by extending path
-					(solveMazeFG(row+1,col,m))   ||     //    in each possible direction
-					(solveMazeFG(row-1,col,m))||
-					(solveMazeFG(row,col-1,m))){
-				//			count1++;
-				return true;
-
-			}
-			maze[row][col] = "0";   // mark cell as having been visited
-			//count1++;
-			putSquare(row,col,m,"0");
-			mazeObject2.setMaze(m);
-			mazeObject2.prn(mazeObject2.getMaze());
-			//		if(hit>1){
-			//			maze[row][col] = " ";
-			//			putSquare(row,col,m," ");
-			//			mazeObject2.setMaze(m);
-			//			mazeObject2.prn(mazeObject2.getMaze());
-			//			return true;  // path has reached goal
-			//		}
-		}else if((count1 <= 10) && (row !=0)&&(row < mazeObject2.getRows()-1)&&(col!=0)
-				&&(col < mazeObject2.getCol()-1)&&(maze[row][col]=="x") ){  //Knock down the wall depending
-			maze[row][col] = "@";									// on the selecting mode
-			putSquare(row,col,m,"@");
-			mazeObject2.setMaze(m);
-			mazeObject2.prn(mazeObject2.getMaze());
-			if ( (solveMazeFG(row,col+1,m) ) ||     // try to solve maze by extending path
-					(solveMazeFG(row+1,col,m))   ||     //    in each possible direction
-					(solveMazeFG(row-1,col,m))||
-					(solveMazeFG(row,col-1,m))){
-				//			count1++;
-				return true;
-
-			}
-			maze[row][col] = "0";   // mark cell as having been visited
-			//count1++;
-			putSquare(row,col,m,"0");
-			mazeObject2.setMaze(m);
-			mazeObject2.prn(mazeObject2.getMaze());
-		}
-
-
 		//count1++;
 
 		return false;
