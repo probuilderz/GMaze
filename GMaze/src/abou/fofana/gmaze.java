@@ -1,7 +1,12 @@
 package abou.fofana;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.lang.Math;;
 
 /***************************************************************************************
@@ -18,6 +23,7 @@ public class gmaze {
 	private static int col;
 	private static String[][] maze;
 	private static int count1 = 0;
+	private static int num_file = 0;
 	private static int hit = 0;
 	private static int num_intrud = 0;
 	private static int destroy_intrud = 0;
@@ -35,7 +41,7 @@ public class gmaze {
 	/*
 	 * Overloaded constructor
 	 */
-	
+
 	private gmaze(int r, int c, String[][] ma){
 		rows = r;
 		col = c;
@@ -104,7 +110,7 @@ public class gmaze {
 		return myMaze1;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 
 		Scanner scan = new Scanner(System.in);
 
@@ -215,11 +221,38 @@ public class gmaze {
 		int c = r;
 
 		String[][] maze = new String[r][c];
+		ArrayList<gmaze> list = new ArrayList<>();
+		ArrayList<Integer> list1 = new ArrayList<>();
+		ArrayList<Integer> list2 = new ArrayList<>();
+		
+//		File myOutput1 = new File("log"+num_file+".txt");
+//		num_file++;
+//		PrintWriter printWrite = new PrintWriter(myOutput1);
+//		if(!myOutput1.exists()){
+//			System.out.println("Failed to create File");
+//		}
 		//String[][] previous_maze = new String[r][c];   //finding a way to store previous maze for re-scanning 
 		while(ans){
+			
+			File myOutput1 = new File("log"+num_file+".txt");
+			num_file++;
+			PrintWriter printWrite = new PrintWriter(myOutput1);
+			if(!myOutput1.exists()){
+				System.out.println("Failed to create File");
+			}
 			boolean isSolve = false;
 
 			maze = makeMaze(r,c, percent);
+			
+			for(int i=0; i<maze.length;i++){
+				//System.out.println();
+				printWrite.println();
+				for(int j=0; j< maze.length;j++ )
+					printWrite.print(maze[i][j]+ "");
+				
+			}
+			System.out.println();
+			
 			System.out.println("You have " + num_intrud + " intruders in the maze"); 
 			System.out.println("How many intruders are you willing to destroy?");
 			
@@ -237,8 +270,32 @@ public class gmaze {
 			if (destroy_intrud > num_intrud)
 				destroy_intrud = num_intrud;        // Set the value of destroy_intrud to 
 													// num_intrud if greater.
-		
-				isSolve = solveMazeEG(1,1,maze,select_mode);
+			//--------------testing
+				Date myDate = new Date();
+				printWrite.println();
+				printWrite.println(" GMaze started at " + myDate);
+				printWrite.println();
+				isSolve = solveMazeEG(1,1,maze,select_mode, list1,list2);
+				
+				maze = gmazeCreator().getMaze();
+				for(int i=0; i<maze.length;i++){
+					//System.out.println();
+					printWrite.println();
+					for(int j=0; j< maze.length;j++ )
+						printWrite.print(maze[i][j]+ "");
+					
+				}
+//				System.out.println(list.size());
+//				prn_list(list);
+				printWrite.println();
+				for(int i = 0; i< list1.size(); i++){
+					printWrite.print("Target "+i+" found at "+"row="+list1.get(i)+", col="+list2.get(i)+ "\n");
+					printWrite.println();
+				}
+				System.out.println();	
+
+				
+			//-------------end testing
 
 
 			if(isSolve){
@@ -263,6 +320,7 @@ public class gmaze {
 			hit=0;
 			count1=0;
 			inside_wall =0;
+			list.clear();
 
 			System.out.print("Do you want to play again? \n");
 			System.out.print("Put \"y\" for yes, and \"n\" for no, without the quote :");
@@ -287,8 +345,14 @@ public class gmaze {
 			
 			if (keep.equals("y")|| keep.equals("Y")){
 				ans = true;
+				printWrite.close();
+				printWrite.close();
+				printWrite.close();
 			}else{
 				ans = false;
+				printWrite.close();
+				printWrite.close();
+				printWrite.close();
 				System.exit(0);
 			}
 
@@ -369,7 +433,8 @@ public class gmaze {
 	/**********************************************************************************
 	 * 
 	 * @param perc
-	 * @return	True
+	 * @return	True when the number is in the range 0 - 100
+	 * @Note Set the number to a positive integer
 	 */
 	private static boolean checkValue(String perc) {
 		// TODO Auto-generated method stub
@@ -421,6 +486,16 @@ public class gmaze {
 			return false;
 		}
 
+	}
+	/****************************************
+	 * Function: prn_list()		print list
+	 * @param l
+	 */
+	private static void prn_list(ArrayList<gmaze> l){
+		for(int i = 0; i< l.size(); i++){
+				System.out.print("Target "+i+" found at "+"row="+l.get(i).getRows()+ ", col="+l.get(i).getCol()+ "\n");
+		}
+		System.out.println();	
 	}
 
 	/***********************************************************************
@@ -502,14 +577,14 @@ public class gmaze {
 		for(i = 0; i< gmazeCreator1().getRows(); i++)
 			for(j = 0; j< gmazeCreator1().getCol(); j++)
 				mazet[i][j] = "x";        // every space is a wall
-
+				//gmazeCreator1().prn(mazet);
 		/* Initialize the starting point */
 
 		for( i = 1; i<gmazeCreator1().getRows()-1; i+=2)
 			for(j = 1; j<gmazeCreator1().getCol() -1; j+=2){
 				
 				empty++;
-				mazet[i][j] = (- empty) + "";  // create a grid, with ASCII characters inside						    	
+				mazet[i][j] = (-empty)+ "";  // create a grid, with ASCII characters inside rooms						    	
 
 				if (i < gmazeCreator1().getRows()-2) {  // record info about wall below this room
 					wallrow[wallCt] = i+1;
@@ -545,6 +620,7 @@ public class gmaze {
 		}
 
 		mazet = gmazeCreator1().getMaze();
+		
 
 		// Replace all remaining characters that are not walls into space character " "
 		for(i =1; i<gmazeCreator1().getRows()-1; i++)
@@ -559,7 +635,9 @@ public class gmaze {
 				}
 				
 			}
+//		gmazeCreator1().prn(mazet);
 		mazet[1][0] = "@";                 // position of the object
+//		gmazeCreator1().prn(mazet);
 		Random intruders = new Random();
 		for(i =2; i<gmazeCreator1().getRows()-1; i++)   // Injection of intruders at random level 
 			for(j =2; j<gmazeCreator1().getRows()-1; j++){
@@ -570,6 +648,7 @@ public class gmaze {
 
 			}
 		gmazeCreator1().setMaze(mazet);
+		gmazeCreator1().prn(mazet);
 		return gmazeCreator1().getMaze();
 
 	}
@@ -583,7 +662,7 @@ public class gmaze {
 	 * @Note	  	: {@link row},  {@link col} are the walls or rooms position that the Navigator 
 	 * 				  check before moving.
 	 */
-	private static boolean solveMazeEG(int row, int col, String[][]m, int mode) {
+	private static boolean solveMazeEG(int row, int col, String[][]m, int mode, ArrayList<Integer> l1, ArrayList<Integer> l2) {
 
 		int speedSleep = 500;
 		if(mode == 0){
@@ -599,32 +678,32 @@ public class gmaze {
 				m[row][col] = "@";      // add this cell to the path
 				count1++;
 				putSquare(row,col,m,"@");
-				gmazeCreator().setMaze(m);
+				gmazeCreator1().setMaze(m);
 				//mazeObject2.setMaze(m);
-				gmazeCreator().prn(gmazeCreator().getMaze());
+				gmazeCreator1().prn(gmazeCreator1().getMaze());
 				//mazeObject2.prn(mazeObject2.getMaze());
 				//			if (row == mazeObject2.getRows()-2 && col == mazeObject2.getCol()-2)
 				//				return true;  // path has reached goal
 	
 				try { Thread.sleep(speedSleep); }
 				catch (InterruptedException e) { }
-				if ( (solveMazeEG(row,col+1,m,mode) ) ||     // try to solve maze by extending path
-						(solveMazeEG(row+1,col,m,mode))   ||     //    in each possible direction
-						(solveMazeEG(row-1,col,m,mode))||
-						(solveMazeEG(row,col-1,m,mode))){
+				if ( (solveMazeEG(row,col+1,m,mode,l1,l2) ) ||     // try to solve maze by extending path
+						(solveMazeEG(row+1,col,m,mode,l1,l2))   ||     //    in each possible direction
+						(solveMazeEG(row-1,col,m,mode,l1,l2))||
+						(solveMazeEG(row,col-1,m,mode,l1,l2))){
 					//				count1++;
 					return true;
+					
 	
 				}
-	
 	
 				// maze can't be solved from this cell, so backtrack out of the cell
 				maze[row][col] = ".";   // mark cell as having been visited
 				//count1++;
 				putSquare(row,col,m,".");
-				gmazeCreator().setMaze(m);
+				gmazeCreator1().setMaze(m);
 				//mazeObject2.setMaze(m);
-				gmazeCreator().prn(gmazeCreator().getMaze());
+				gmazeCreator1().prn(gmazeCreator1().getMaze());
 				//mazeObject2.prn(mazeObject2.getMaze());
 				//count1++;
 	
@@ -633,14 +712,18 @@ public class gmaze {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			}else if ((maze[row][col]=="T") && (hit < destroy_intrud)){
+			}else if ((maze[row][col]=="T") && (hit < destroy_intrud)){ 
+				//list.add(new gmaze(row, col));
+				//list.add(gmazeCreator1());
+				l1.add(row);
+				l2.add(col);
 				maze[row][col] = "@";
 				putSquare(row,col,m,"@");
 				hit++;			
-				//mazeObject2.setMaze(m);
-				gmazeCreator().setMaze(m);
-				gmazeCreator().prn(gmazeCreator().getMaze());
-				//mazeObject2.prn(mazeObject2.getMaze());
+		
+				gmazeCreator1().setMaze(m);
+				gmazeCreator1().prn(gmazeCreator1().getMaze());
+				
 	//			if(hit == num_intrud){
 	//				
 	//				
@@ -648,10 +731,10 @@ public class gmaze {
 	//			}
 				try { Thread.sleep(speedSleep); }
 				catch (InterruptedException e) { }
-				if ( (solveMazeEG(row,col+1,m,mode) ) ||     // try to solve maze by extending path
-						(solveMazeEG(row+1,col,m,mode))   ||     //    in each possible direction
-						(solveMazeEG(row-1,col,m,mode))||
-						(solveMazeEG(row,col-1,m,mode))){
+				if ( (solveMazeEG(row,col+1,m,mode,l1,l2) ) ||     // try to solve maze by extending path
+						(solveMazeEG(row+1,col,m,mode,l1,l2))   ||     //    in each possible direction
+						(solveMazeEG(row-1,col,m,mode,l1,l2))||
+						(solveMazeEG(row,col-1,m,mode,l1,l2))){
 					//				count1++;
 					return true;
 	
@@ -659,21 +742,21 @@ public class gmaze {
 				maze[row][col] = ".";   // mark cell as having been visited
 				//count1++;
 				putSquare(row,col,m,".");
-				gmazeCreator().setMaze(m);
-				gmazeCreator().prn(gmazeCreator().getMaze());
+				gmazeCreator1().setMaze(m);
+				gmazeCreator1().prn(gmazeCreator1().getMaze());
 
-			}else if((count1 <=mode_int) && (row !=0)&&(row < gmazeCreator().getRows()-1)&&(col!=0)
-					&&(col < gmazeCreator().getCol()-1)&&(maze[row][col]=="x") &&(hit <destroy_intrud)){ //This is to avoid the Runner to be
+			}else if((count1 <=mode_int) && (row !=0)&&(row < gmazeCreator1().getRows()-1)&&(col!=0)
+					&&(col < gmazeCreator1().getCol()-1)&&(maze[row][col]=="x") &&(hit <destroy_intrud)){ //This is to avoid the Runner to be
 				maze[row][col] = "@";									// stuck in the first move
 				putSquare(row,col,m,"@");
-				gmazeCreator().setMaze(m);
-				gmazeCreator().prn(gmazeCreator().getMaze());
+				gmazeCreator1().setMaze(m);
+				gmazeCreator1().prn(gmazeCreator1().getMaze());
 //				mazeObject2.setMaze(m);
 //				mazeObject2.prn(mazeObject2.getMaze());
-				if ( (solveMazeEG(row,col+1,m,mode) ) ||     // try to solve maze by extending path
-						(solveMazeEG(row+1,col,m,mode))   ||     //    in each possible direction
-						(solveMazeEG(row-1,col,m,mode))||
-						(solveMazeEG(row,col-1,m,mode))){
+				if ( (solveMazeEG(row,col+1,m,mode,l1,l2) ) ||     // try to solve maze by extending path
+						(solveMazeEG(row+1,col,m,mode,l1,l2))   ||     //    in each possible direction
+						(solveMazeEG(row-1,col,m,mode,l1,l2))||
+						(solveMazeEG(row,col-1,m,mode,l1,l2))){
 					//				count1++;
 					return true;
 	
@@ -681,8 +764,8 @@ public class gmaze {
 				maze[row][col] = ".";   // mark cell as having been visited
 				//count1++;
 				putSquare(row,col,m,".");
-				gmazeCreator().setMaze(m);
-				gmazeCreator().prn(gmazeCreator().getMaze());
+				gmazeCreator1().setMaze(m);
+				gmazeCreator1().prn(gmazeCreator1().getMaze());
 
 			}
 		//count1++;

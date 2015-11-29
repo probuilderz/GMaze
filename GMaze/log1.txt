@@ -1,0 +1,36 @@
+
+xxxxxxxxxxxxx
+@           x
+xxxTx xxT x x
+x    T   T  x
+x xxx xxx T x
+x T  T Tx T x
+x TTxTTxT T x
+x  TT    Tx x
+x xxxxx x x x
+x T T     x x
+x TxTxT xxxTx
+x x T    T  x
+xxxxxxxxxxxxx
+ GMaze started at Sat Nov 28 19:36:32 EST 2015
+
+
+xxxxxxxxxxxxx
+@...........x
+xxxTx xxT x.x
+x    T   T .x
+x xxx xxx T.x
+x T  T Tx T.x
+x TTxTTxT T.x
+x  TT    Tx.x
+x xxxxx x x.x
+x T T     x.x
+x TxTxT xxx.x
+x x T    ...x
+xxxxxxxxxxxxx
+Target 0 found at row=4, col=5
+
+Target 1 found at row=10, col=11
+
+Target 2 found at row=11, col=9
+
