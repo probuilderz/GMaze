@@ -225,13 +225,6 @@ public class gmaze {
 		ArrayList<Integer> list1 = new ArrayList<>();
 		ArrayList<Integer> list2 = new ArrayList<>();
 		
-//		File myOutput1 = new File("log"+num_file+".txt");
-//		num_file++;
-//		PrintWriter printWrite = new PrintWriter(myOutput1);
-//		if(!myOutput1.exists()){
-//			System.out.println("Failed to create File");
-//		}
-		//String[][] previous_maze = new String[r][c];   //finding a way to store previous maze for re-scanning 
 		while(ans){
 			
 			File myOutput1 = new File("log"+num_file+".txt");
@@ -320,7 +313,8 @@ public class gmaze {
 			hit=0;
 			count1=0;
 			inside_wall =0;
-			list.clear();
+			list1.clear();
+			list2.clear();
 
 			System.out.print("Do you want to play again? \n");
 			System.out.print("Put \"y\" for yes, and \"n\" for no, without the quote :");
@@ -666,7 +660,7 @@ public class gmaze {
 
 		int speedSleep = 500;
 		if(mode == 0){
-			mode_int = (int)(num_intrud *(0.1));
+			mode_int = (int)(num_intrud *(0.05));
 		}else if(mode == 1){
 			mode_int = (int)(num_intrud *(0.2));
 		}else{
@@ -749,6 +743,7 @@ public class gmaze {
 					&&(col < gmazeCreator1().getCol()-1)&&(maze[row][col]=="x") &&(hit <destroy_intrud)){ //This is to avoid the Runner to be
 				maze[row][col] = "@";									// stuck in the first move
 				putSquare(row,col,m,"@");
+				count1++;
 				gmazeCreator1().setMaze(m);
 				gmazeCreator1().prn(gmazeCreator1().getMaze());
 //				mazeObject2.setMaze(m);
