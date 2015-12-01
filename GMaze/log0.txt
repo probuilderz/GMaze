@@ -2,19 +2,21 @@
 xxxxxxx
 @     x
 xxxTx x
-x     x
-xxxxxTx
-x    Tx
+x   x x
+x x xTx
+x xT  x
 xxxxxxx
- GMaze started at Sat Nov 28 19:36:11 EST 2015
+ GMaze started at Tue Dec 01 13:10:05 EST 2015
 
 
 xxxxxxx
 @.....x
 xxxTx.x
-x    .x
-xxxxx.x
-x    Tx
+x   x.x
+x x x.x
+x x...x
 xxxxxxx
 Target 0 found at row=4, col=5
+
+Target 1 found at row=5, col=3
 

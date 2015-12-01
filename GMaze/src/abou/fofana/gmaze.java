@@ -673,9 +673,7 @@ public class gmaze {
 				count1++;
 				putSquare(row,col,m,"@");
 				gmazeCreator1().setMaze(m);
-				//mazeObject2.setMaze(m);
 				gmazeCreator1().prn(gmazeCreator1().getMaze());
-				//mazeObject2.prn(mazeObject2.getMaze());
 				//			if (row == mazeObject2.getRows()-2 && col == mazeObject2.getCol()-2)
 				//				return true;  // path has reached goal
 	
@@ -687,8 +685,6 @@ public class gmaze {
 						(solveMazeEG(row,col-1,m,mode,l1,l2))){
 					//				count1++;
 					return true;
-					
-	
 				}
 	
 				// maze can't be solved from this cell, so backtrack out of the cell
@@ -696,9 +692,7 @@ public class gmaze {
 				//count1++;
 				putSquare(row,col,m,".");
 				gmazeCreator1().setMaze(m);
-				//mazeObject2.setMaze(m);
 				gmazeCreator1().prn(gmazeCreator1().getMaze());
-				//mazeObject2.prn(mazeObject2.getMaze());
 				//count1++;
 	
 				try {
@@ -707,8 +701,6 @@ public class gmaze {
 					e.printStackTrace();
 				}
 			}else if ((maze[row][col]=="T") && (hit < destroy_intrud)){ 
-				//list.add(new gmaze(row, col));
-				//list.add(gmazeCreator1());
 				l1.add(row);
 				l2.add(col);
 				maze[row][col] = "@";
@@ -718,11 +710,6 @@ public class gmaze {
 				gmazeCreator1().setMaze(m);
 				gmazeCreator1().prn(gmazeCreator1().getMaze());
 				
-	//			if(hit == num_intrud){
-	//				
-	//				
-	//				return true;
-	//			}
 				try { Thread.sleep(speedSleep); }
 				catch (InterruptedException e) { }
 				if ( (solveMazeEG(row,col+1,m,mode,l1,l2) ) ||     // try to solve maze by extending path
@@ -746,8 +733,6 @@ public class gmaze {
 				count1++;
 				gmazeCreator1().setMaze(m);
 				gmazeCreator1().prn(gmazeCreator1().getMaze());
-//				mazeObject2.setMaze(m);
-//				mazeObject2.prn(mazeObject2.getMaze());
 				if ( (solveMazeEG(row,col+1,m,mode,l1,l2) ) ||     // try to solve maze by extending path
 						(solveMazeEG(row+1,col,m,mode,l1,l2))   ||     //    in each possible direction
 						(solveMazeEG(row-1,col,m,mode,l1,l2))||
