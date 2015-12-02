@@ -1,22 +1,74 @@
 
-xxxxxxx
-@     x
-xxxTx x
-x   x x
-x x xTx
-x xT  x
-xxxxxxx
- GMaze started at Tue Dec 01 13:10:05 EST 2015
+xxxxxxxxxxxxxxxxxxxxxxxxx
+@ x     x               x
+xxT x xTxxTTx x xTx xTxxx
+x    TT x  T Tx T   x  Tx
+x xTxTTTxxx xTx T xxxxx x
+x TTx T xTx     T   TT  x
+x Txx xxx xTxTT T x xxxTx
+x x   T   T   T T T    Tx
+x x TTxxxxTTT xTTTxxxxxxx
+x    T    TTTTx x  TTTT x
+xxT xxx TTT xxx TTTTx x x
+x   x    T  x T T   T  Tx
+xxxxTxTTx x xTx x TxT T x
+x T         xT  T   T T x
+x Txxxx x TTx xTx xTxTx x
+x T   xT    T     T T   x
+xxTTT x xTxxT xxTTxxxTTxx
+x  TTT  T T  T  T T x T x
+xxT xxTTT Txxxxxxxx xTT x
+x TT  TTx   T  TT     TTx
+x Txx xTx xxT xxTxTxT T x
+x  TT xT    x T T  T   Tx
+xxx T xxx xTT xxTTTTx Txx
+x T TTx   x   xT   T  x x
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ GMaze started at Tue Dec 01 13:42:40 EST 2015
 
 
-xxxxxxx
-@.....x
-xxxTx.x
-x   x.x
-x x x.x
-x x...x
-xxxxxxx
-Target 0 found at row=4, col=5
+xxxxxxxxxxxxxxxxxxxxxxxxx
+@.......................x
+xxT x xTxxTTx x xTx x.xxx
+x    TT x  T Tx T   x...x
+x xTxTTTxxx xTx T xxxxx.x
+x TTx T xTx     T.......x
+x Txx xxx xTxTT T.x.xxx.x
+x x   T   T   T T.......x
+x x TTxxxxTTT xTT.xxxxxxx
+x    T    TTTTx x....TT x
+xxT xxx TTT xxx TTTTx x x
+x   x    T  x T T   T  Tx
+xxxxTxTTx x xTx x TxT T x
+x T         xT  T   T T x
+x Txxxx x TTx xTx xTxTx x
+x T   xT    T     T T   x
+xxTTT x xTxxT xxTTxxxTTxx
+x  TTT  T T  T  T T x T x
+xxT xxTTT Txxxxxxxx xTT x
+x TT  TTx   T  TT     TTx
+x Txx xTx xxT xxTxTxT T x
+x  TT xT    x T T  T   Tx
+xxx T xxx xTT xxTTTTx Txx
+x T TTx   x   xT   T  x x
+xxxxxxxxxxxxxxxxxxxxxxxxx
+Target 0 found at row=2, col=21
 
-Target 1 found at row=5, col=3
+Target 1 found at row=3, col=23
+
+Target 2 found at row=6, col=23
+
+Target 3 found at row=7, col=23
+
+Target 4 found at row=5, col=20
+
+Target 5 found at row=5, col=21
+
+Target 6 found at row=7, col=18
+
+Target 7 found at row=8, col=17
+
+Target 8 found at row=9, col=19
+
+Target 9 found at row=9, col=20
 

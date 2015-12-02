@@ -160,8 +160,7 @@ public class gmaze {
 		System.out.print("Enter the percentage of wall inside the maze from 0-100 :");
 		String perc = scan.next();
 		check_num = checkValue(perc);
-		//check_num= isStringInt(perc);
-		
+
 		int percent = 0;
 
 		while(!check_num){
@@ -221,7 +220,6 @@ public class gmaze {
 		int c = r;
 
 		String[][] maze = new String[r][c];
-		ArrayList<gmaze> list = new ArrayList<>();
 		ArrayList<Integer> list1 = new ArrayList<>();
 		ArrayList<Integer> list2 = new ArrayList<>();
 		
@@ -238,7 +236,6 @@ public class gmaze {
 			maze = makeMaze(r,c, percent);
 			
 			for(int i=0; i<maze.length;i++){
-				//System.out.println();
 				printWrite.println();
 				for(int j=0; j< maze.length;j++ )
 					printWrite.print(maze[i][j]+ "");
@@ -272,14 +269,12 @@ public class gmaze {
 				
 				maze = gmazeCreator().getMaze();
 				for(int i=0; i<maze.length;i++){
-					//System.out.println();
 					printWrite.println();
 					for(int j=0; j< maze.length;j++ )
 						printWrite.print(maze[i][j]+ "");
 					
 				}
-//				System.out.println(list.size());
-//				prn_list(list);
+
 				printWrite.println();
 				for(int i = 0; i< list1.size(); i++){
 					printWrite.print("Target "+i+" found at "+"row="+list1.get(i)+", col="+list2.get(i)+ "\n");
@@ -292,7 +287,6 @@ public class gmaze {
 
 
 			if(isSolve){
-				//System.out.println("The maze can be solved after: "+ (count1+1)+ " iterations");
 				System.out.println("The system has detected and killed "+ (hit)+ " intruders");
 				System.out.println("No more intruder. The system is clean.");
 			}else{
@@ -306,8 +300,9 @@ public class gmaze {
 					System.out.println("Reduce the percentage of walls for better performance.");
 				}else System.out.println("No more intruder. The system is clean.");
 
-				//System.out.println("The maze has no solving path");
 			}
+			/*--Reset global value after every trial--*/
+			
 			num_intrud = 0;
 			mode_int=0;
 			hit=0;
@@ -355,7 +350,6 @@ public class gmaze {
 			rt = scan.next();
 
 			check_num= isStringInt(rt);
-			//			r = 0;
 
 			while(check_num == false){
 				System.out.print("Number entered is not an integer");
@@ -425,8 +419,8 @@ public class gmaze {
 
 	}
 	/**********************************************************************************
-	 * 
-	 * @param perc
+	 * Function: {@link checkValue}
+	 * @param perc - a String
 	 * @return	True when the number is in the range 0 - 100
 	 * @Note Set the number to a positive integer
 	 */
@@ -519,19 +513,12 @@ public class gmaze {
 
 	private static void putSquare(int row, int col,String[][] m, String c) {
 
-		//String[][]maze= m;
-		//gmaze mazeObject1 = new gmaze(maze.length, maze.length);
 		m[row][col] = c;
 		gmazeCreator1().setMaze(m);
-		//mazeObject1.setMaze(maze);
-		//count1++;
 
 	}
 
 	private static void fill(int row, int col, String[][] m,String replace, String replaceWith) {
-
-		//String[][]maze = m;
-		//gmaze mazeObject2 = new gmaze(maze.length, maze.length);
 
 		if (m[row][col] ==replace) {
 			m[row][col] = replaceWith;
@@ -562,7 +549,6 @@ public class gmaze {
 
 		/*Create a square maze where everything is wall */
 		int i=0,j=0;
-		//int emptyCt = 0; // number of rooms
 		int wallCt = 0;  // number of walls
 		int[] wallrow = new int[(gmazeCreator1().getRows()*gmazeCreator1().getCol())/2];  // position of walls between rooms
 		int[] wallcol = new int[(gmazeCreator1().getRows()*gmazeCreator1().getCol())/2];
@@ -571,9 +557,9 @@ public class gmaze {
 		for(i = 0; i< gmazeCreator1().getRows(); i++)
 			for(j = 0; j< gmazeCreator1().getCol(); j++)
 				mazet[i][j] = "x";        // every space is a wall
-				//gmazeCreator1().prn(mazet);
-		/* Initialize the starting point */
-
+				//gmazeCreator1().prn(mazet); For debugging purposes
+	
+		/* Creation of rooms */
 		for( i = 1; i<gmazeCreator1().getRows()-1; i+=2)
 			for(j = 1; j<gmazeCreator1().getCol() -1; j+=2){
 				
@@ -591,14 +577,16 @@ public class gmaze {
 					wallCt++;
 				}
 			}
-		//		mazeObject.prn1(wallrow, wallcol, wallCt);   // this display bottom, right and left side walls position of the grid. 
+		//		mazeObject.prn1(wallrow, wallcol, wallCt);   // this display bottom, right and left side 
+														  //walls position of room in the grid. Debugging purposes
 		
 		gmazeCreator1().setMaze(mazet);
-		//gmazeCreator1().prn(mazet);
+
 		/* Create randoms wall*/
 		Random rand = new Random();
 		int wall_destroy=0;
-		// Randomly create wall based on user's level of difficulty input
+		
+		// Randomly create wall based on user's percentage input
 
 		for (int k=wallCt-1; k>0; k--) {
 			int rand_value = rand.nextInt(100);
@@ -606,7 +594,7 @@ public class gmaze {
 			if(rand_value > percent_wall ){
 				tearDown(wallrow[k],wallcol[k],gmazeCreator1().getMaze());
 				//				wallrow[rt] = wallrow[k];
-				//				wallcol[rt] = wallcol[k];
+				//				wallcol[rt] = wallcol[k];  //Other way of implementation
 				wall_destroy++;
 			}
 
@@ -629,13 +617,14 @@ public class gmaze {
 				}
 				
 			}
-//		gmazeCreator1().prn(mazet);
+
 		mazet[1][0] = "@";                 // position of the object
-//		gmazeCreator1().prn(mazet);
+
+		
 		Random intruders = new Random();
 		for(i =2; i<gmazeCreator1().getRows()-1; i++)   // Injection of intruders at random level 
 			for(j =2; j<gmazeCreator1().getRows()-1; j++){
-				if(intruders.nextInt(10)>6){
+				if(intruders.nextInt(10)>6){            // 40% of case the intruders will be created based on maze size
 					mazet[i][j] = "T";
 					num_intrud++;
 				}
@@ -660,7 +649,7 @@ public class gmaze {
 
 		int speedSleep = 500;
 		if(mode == 0){
-			mode_int = (int)(num_intrud *(0.05));
+			mode_int = (int)(num_intrud *(0.05));   //5% of total intruders.
 		}else if(mode == 1){
 			mode_int = (int)(num_intrud *(0.2));
 		}else{
@@ -675,7 +664,7 @@ public class gmaze {
 				gmazeCreator1().setMaze(m);
 				gmazeCreator1().prn(gmazeCreator1().getMaze());
 				//			if (row == mazeObject2.getRows()-2 && col == mazeObject2.getCol()-2)
-				//				return true;  // path has reached goal
+				//				return true;   // path has reached goal. old implementation
 	
 				try { Thread.sleep(speedSleep); }
 				catch (InterruptedException e) { }
@@ -683,18 +672,15 @@ public class gmaze {
 						(solveMazeEG(row+1,col,m,mode,l1,l2))   ||     //    in each possible direction
 						(solveMazeEG(row-1,col,m,mode,l1,l2))||
 						(solveMazeEG(row,col-1,m,mode,l1,l2))){
-					//				count1++;
 					return true;
 				}
 	
 				// maze can't be solved from this cell, so backtrack out of the cell
 				maze[row][col] = ".";   // mark cell as having been visited
-				//count1++;
 				putSquare(row,col,m,".");
 				gmazeCreator1().setMaze(m);
 				gmazeCreator1().prn(gmazeCreator1().getMaze());
-				//count1++;
-	
+				
 				try {
 					Thread.sleep(speedSleep);
 				} catch (InterruptedException e) {
@@ -716,12 +702,10 @@ public class gmaze {
 						(solveMazeEG(row+1,col,m,mode,l1,l2))   ||     //    in each possible direction
 						(solveMazeEG(row-1,col,m,mode,l1,l2))||
 						(solveMazeEG(row,col-1,m,mode,l1,l2))){
-					//				count1++;
 					return true;
 	
 				}
 				maze[row][col] = ".";   // mark cell as having been visited
-				//count1++;
 				putSquare(row,col,m,".");
 				gmazeCreator1().setMaze(m);
 				gmazeCreator1().prn(gmazeCreator1().getMaze());
@@ -737,7 +721,6 @@ public class gmaze {
 						(solveMazeEG(row+1,col,m,mode,l1,l2))   ||     //    in each possible direction
 						(solveMazeEG(row-1,col,m,mode,l1,l2))||
 						(solveMazeEG(row,col-1,m,mode,l1,l2))){
-					//				count1++;
 					return true;
 	
 				}
@@ -748,8 +731,6 @@ public class gmaze {
 				gmazeCreator1().prn(gmazeCreator1().getMaze());
 
 			}
-		//count1++;
-
 		return false;
 	}
 
