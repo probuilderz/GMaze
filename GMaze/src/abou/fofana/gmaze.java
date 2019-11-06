@@ -14,7 +14,7 @@ import java.lang.Math;;
  * @author Fofana, Bui, Kozak
  * @version 1.5
  * @Objective:
- *
+ * Credit to David Eck
  */
 
 public class gmaze {
